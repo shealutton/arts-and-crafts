@@ -1,0 +1,25 @@
+div.loading {
+    background-color: #eee;
+    background-image: url('progress.gif');
+    background-position:  center center;
+    background-repeat: no-repeat;
+    opacity: 1;
+}
+div.loading * {
+    opacity: .8;
+}
+
+div#chart_container{
+    float:left;
+    margin-left:20px;
+    margin-top:5px;
+    width:900px;
+    height:650px;
+}
+#loadingDiv ul{ margin-left:0;}
+#loadingDiv strong{ margin-left:0;}
+#loadingDiv li{ list-style:none;}
+#loadingDiv .mleft{ margin-left: 1.3em}
+#loadingDiv .mright{ margin-right: .6em}
+
+#stats_page{ clear:both; width:100%; position:relative;}

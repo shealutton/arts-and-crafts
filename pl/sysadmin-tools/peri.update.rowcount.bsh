@@ -1,0 +1,26 @@
+#!/bin/bash
+
+unalias psql >/dev/null 2>&1
+PSQL=`which psql`
+PG_INIT="${PSQL} -U postgres -d peri -h localhost"
+
+PUSERS=`${PG_INIT} -t -c "SELECT DISTINCT user__id from experiments"`
+MTABLES=`${PG_INIT} -t -c "SELECT tablename FROM pg_tables WHERE tablename LIKE E'm\\_%'"`
+
+for i in $PUSERS 
+  do 
+  for j in $MTABLES 
+    do 
+    if [ $j != metrics ]; then
+      COUNT=`${PG_INIT} -t -c "select * from rowcount where user__id = '${i}' and table_name = '${j}';" |wc -l`
+      if [ $COUNT -gt '1' ]; then
+        ${PG_INIT} -t -c "UPDATE rowcount SET total_rows = (select count(*) from vi_${j}_users where user__id = '${i}') WHERE user__id = '${i}' AND table_name = '${j}'"
+      else
+        ${PG_INIT} -t -c "INSERT INTO rowcount (user__id, table_name, total_rows) VALUES ('${i}', '${j}',(select count(*) from vi_${j}_users where user__id = '${i}'))"
+      fi
+    fi
+  done
+done
+
+echo "Total Row Count:"
+${PG_INIT} -c "SELECT * from rowcount"

@@ -1,0 +1,52 @@
+#!/bin/bash
+# Copyright 2012, Peri Labs, Inc. 
+# Cron as root for nightly backups
+
+### REQUIRES ### 
+# A /root/.pgpass file with passwords for the postgres user 
+# OR
+# A pg_hba entry for trusted access as the postgres user. 
+### PURPOSE ###
+# This script will make a complete archive of all files and the entire contents
+# of the postgres DB. If you have more than one DB on this system, be careful,
+# it may take a long time. You might prefer a pg_dump with a separate dump
+# of the cluster-wide settings. 
+
+### Comment me out ###
+echo "Read me first and set a postgres password in ~/.pgpass, like this:"
+echo "echo hostname:port:database:username:password >>~/.pgpass"
+echo "echo localhost:5432:peri:peri:password >>~/.pgpass"
+exit 1
+######################
+
+command -v mkdir >/dev/null 2>&1 || { echo >&2 "Mkdir is required but it's not installed.  Aborting."; exit 1; }
+command -v chmod >/dev/null 2>&1 || { echo >&2 "Chmod is required but it's not installed.  Aborting."; exit 1; }
+command -v chown >/dev/null 2>&1 || { echo >&2 "Chown is required but it's not installed.  Aborting."; exit 1; }
+command -v date >/dev/null 2>&1 || { echo >&2 "Date is required but it's not installed.  Aborting."; exit 1; }
+command -v pg_dumpall >/dev/null 2>&1 || { echo >&2 "Pg_dumpall is required but it's not installed.  Aborting."; exit 1; }
+command -v tar >/dev/null 2>&1 || { echo >&2 "Tar is required but it's not installed.  Aborting."; exit 1; }
+command -v pbzip2 >/dev/null 2>&1 || { echo >&2 "Pbzip2 is required but it's not installed.  Aborting."; exit 1; }
+command -v find >/dev/null 2>&1 || { echo >&2 "Find is required but it's not installed.  Aborting."; exit 1; }
+
+DATE=`date +%Y%m%d`
+mkdir -p /backup/perilabs/${DATE}.perilabs.backup
+chmod 700 /backup
+chown root:root /backup
+chmod 600 ~/.pgpass
+
+cd /backup/perilabs/${DATE}.perilabs.backup
+tar -chjf data.tar.bz2 /var/www/data
+tar -chjf framework.tar.bz2 /opt/yii/framework
+tar -chjf httpd.tar.bz2 /etc/httpd
+tar -chjf application.tar.bz2 /var/www/current
+
+if [ -e /root/.pgpass ] ; then 
+	pg_dumpall -U postgres -h localhost >/backup/perilabs/${DATE}.perilabs.backup/postgres.backup.sql
+	pbzip2 /backup/perilabs/${DATE}.perilabs.backup/postgres.backup.sql
+else
+	echo "A password is required for the Postgres user. BACKUP FAILED"
+	exit 1
+fi
+
+find /backup/perilabs/ -type f -mtime +45 | xargs --replace={} rm {}
+

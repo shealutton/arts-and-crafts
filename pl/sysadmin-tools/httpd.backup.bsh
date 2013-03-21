@@ -1,0 +1,15 @@
+#!/bin/bash
+# Shea Lutton
+# Peri Labs 2011
+
+
+DATE=`date +%Y%m%d_%H%M`
+
+# On the dev box this path is on a different drive than the DB partition
+#ssh postgres@localhost mkdir -p /var/lib/pgsql/backups
+mkdir -p /data/httpd.backups
+chmod 700 /data/httpd.backups
+#ssh postgres@localhost pg_dumpall -U postgres -w | pbzip2 > /var/lib/pgsql/backups/${DATE}.sql.bz2
+tar -cf /data/httpd.backups/${DATE}.httpd.conf.tar /etc/httpd 2>/dev/null
+pbzip2 -p4 /data/httpd.backups/${DATE}.httpd.conf.tar
+

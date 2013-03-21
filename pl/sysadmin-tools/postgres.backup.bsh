@@ -1,0 +1,15 @@
+#!/bin/bash
+# Shea Lutton
+# Peri Labs 2011
+
+
+DATE=`date +%Y%m%d_%H%M`
+
+# On the dev box this path is on a different drive than the DB partition
+#ssh postgres@localhost mkdir -p /var/lib/pgsql/backups
+mkdir -p /data/postgres.backups
+chmod 700 /data/postgres.backups
+pg_dumpall -U postgres -w | pbzip2 > /data/postgres.backups/${DATE}.sql.bz2
+
+find /data/postgres.backups/ -type f -mtime +60 | xargs --replace={} rm {}
+

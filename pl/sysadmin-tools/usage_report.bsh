@@ -1,0 +1,12 @@
+#!/bin/bash
+
+unalias psql >/dev/null 2>&1
+PSQL=`which psql`
+PG_INIT="${PSQL} -U postgres -d peri -h localhost"
+
+echo "Total Row Count:"
+${PG_INIT} -c "SELECT * from rowcount"
+echo "Experiment Count:"
+${PG_INIT} -c "SELECT user__id, count(experiment_id) FROM experiments GROUP BY user__id ORDER BY user__id"
+echo "Flatfile Size Count:"
+${PG_INIT} -c "SELECT user__id, sum(filesize) as size_bytes FROM documents GROUP BY user__id ORDER BY user__id"

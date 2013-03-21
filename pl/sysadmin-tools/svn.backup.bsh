@@ -1,0 +1,18 @@
+#!/bin/bash
+# Shea Lutton
+# Peri Labs 2011
+
+
+DATE=`date +%Y%m%d_%H%M`
+
+# On the dev box this path is on a different drive than the DB partition
+mkdir -p /data/svn.backups
+chmod 700 /data/svn.backups
+
+svnadmin dump -q /home/subversion/repos/peri > /data/svn.backups/${DATE}.peri.dump
+svnadmin dump -q /home/subversion/repos/system > /data/svn.backups/${DATE}.system.dump
+
+pbzip2 -p4 /data/svn.backups/${DATE}.peri.dump
+pbzip2 -p4 /data/svn.backups/${DATE}.system.dump
+
+
