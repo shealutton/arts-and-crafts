@@ -1,0 +1,41 @@
+<html>
+<body>
+<h1>Tools on Jump (192.168.40.22)</h1>
+<p>
+<a href="http://192.168.40.22/netbackup">Network configs</a></br>
+<a href="http://192.168.40.22/centos">Centos 6.3 Base Repo</a></br>
+<a href="http://192.168.40.22/mrg">MRG Repo</a></br>
+<a href="http://192.168.40.22/nagios">Nagios Monitor</a></br>
+<a href="http://192.168.40.22/ntp">NTP Stats</a></br>
+</p>
+<h3>New server install protocol:</h3>
+<p>Perform a minimal package install
+<table border="1">
+<th>Size</th>
+<th>Format</th>
+<th>Mount</th>
+<tr>
+<td>200MB</td>
+<td>ext3</td>
+<td>/boot</td>
+</tr>
+<tr>
+<td>4GB</td>
+<td>swap</td>
+<td>&nbsp</td>
+</tr>
+<tr>
+<td>*</td>
+<td>ext2</td>
+<td>/</td>
+</tr>
+</table></br>
+Set hostname:</br>
+vi /etc/sysconfig/network</br></br>
+Set RDP interface:</br>
+vi /etc/sysconfig/network-scripts/ifcfg-*</br>
+or</br>
+curl -O http://192.168.40.22/netbackup/$DATE/$IPADDRESS/ifcfg-*</br>
+</p>
+</body>
+</html>
