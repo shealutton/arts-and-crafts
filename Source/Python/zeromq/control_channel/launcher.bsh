@@ -1,0 +1,23 @@
+#!/bin/bash
+
+./middle.py &
+./middle.py &
+./middle.py &
+./middle.py &
+./middle.py &
+sleep 1
+
+./start.py &
+sleep 1
+
+ps aux |grep middle |grep -v grep |awk '{print $2}' |xargs kill
+
+sleep 1
+
+./middle.py &
+./middle.py &
+./middle.py &
+./middle.py &
+./middle.py 
+
+

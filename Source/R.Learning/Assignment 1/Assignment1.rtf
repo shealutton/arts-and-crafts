@@ -1,0 +1,150 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf340
+{\fonttbl\f0\fnil\fcharset0 HelveticaNeue;\f1\fnil\fcharset0 Monaco;}
+{\colortbl;\red255\green255\blue255;\red49\green49\blue49;\red255\green255\blue255;\red9\green81\blue204;
+\red242\green242\blue242;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid1\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid1}
+{\list\listtemplateid2\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid101\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid2}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}}
+{\info
+{\author Shea Lutton}}\paperw15840\paperh12240\margl1440\margr1440\vieww15760\viewh13000\viewkind0
+\deftab720
+\pard\pardeftab720\sl720
+
+\f0\b\fs36 \cf2 \cb3 Introduction\
+\pard\pardeftab720\sl360
+
+\b0\fs26 \cf2 For this first programming assignment you will write three functions that are meant to interact with dataset that accompanies this assignment. The dataset is contained in a zip file 
+\b specdata.zip
+\b0  that you can download from the Coursera web site.
+\b\fs36 \
+\pard\pardeftab720\sl720
+\cf2 Data\
+\pard\pardeftab720\sl360
+
+\b0\fs26 \cf2 The zip file containing the data can be downloaded here:\
+\pard\tx220\tx720\pardeftab720\li720\fi-720\sl360
+\ls1\ilvl0\cf4 {\listtext	\'95	}{\field{\*\fldinst{HYPERLINK "http://spark-public.s3.amazonaws.com/compdata/data/specdata.zip"}}{\fldrslt specdata.zip}}\cf2  [2.4MB]\
+\pard\pardeftab720\sl360
+\cf2 The zip file contains 332 comma-separated-value (CSV) files containing pollution monitoring data for fine particulate matter (PM) air pollution at 332 locations in the United States. Each file contains data from a single monitor and the ID number for each monitor is contained in the file name. For example, data for monitor 200 is contained in the file "200.csv". Each file contains three variables:\
+\pard\tx220\tx720\pardeftab720\li720\fi-720\sl360
+\ls2\ilvl0\cf2 {\listtext	\'95	}Date: the date of the observation in YYYY-MM-DD format (year-month-day)\
+{\listtext	\'95	}sulfate: the level of sulfate PM in the air on that date (measured in micrograms per cubic meter)\
+{\listtext	\'95	}nitrate: the level of nitrate PM in the air on that date (measured in micrograms per cubic meter)\
+\pard\pardeftab720\sl360
+\cf2 For this programming assignment you will need to unzip this file and create the directory 'specdata'. Once you have unzipped the zip file, 
+\b do not
+\b0  make any modifications to the files in the 'specdata' directory. In each file you'll notice that there are many days where either sulfate or nitrate (or both) are missing (coded as NA). This is common with air pollution monitoring data in the United States.
+\b\fs36 \
+\pard\pardeftab720\sl720
+\cf2 Part 1\
+\pard\pardeftab720\sl360
+
+\b0\fs26 \cf2 Write a function named 'getmonitor' that takes three arguments: 'id', 'directory', and 'summarize'. Given a monitor ID number, 'getmonitor' reads that monitor's particulate matter data from the directory specified in the 'directory' argument and returns a data frame containing that monitor's data. If 'summarize = TRUE', then 'getmonitor' produces a summary of the data frame with the 'summary' function and prints it to the console. A prototype of the function is as follows
+\f1\fs24 \cb5 \
+\pard\pardeftab720\sl360
+\cf2 getmonitor <- function(id, directory, summarize = FALSE) \{\
+        ## 'id' is a vector of length 1 indicating the monitor ID\
+        ## number. The user can specify 'id' as either an integer, a\
+        ## character, or a numeric.\
+        \
+        ## 'directory' is a character vector of length 1 indicating\
+        ## the location of the CSV files\
+\
+        ## 'summarize' is a logical indicating whether a summary of\
+        ## the data should be printed to the console; the default is\
+        ## FALSE\
+        \
+        ## Your code here\
+\}\
+\pard\pardeftab720\sl360
+
+\f0\fs26 \cf2 \cb3 You can see some {\field{\*\fldinst{HYPERLINK "http://spark-public.s3.amazonaws.com/compdata/documents/getmonitor-output.pdf"}}{\fldrslt \cf4 example output from this function}}. The function that you write should be able to match this output. Please save your code to a file named 
+\b getmonitor.R
+\b0 . To run the test script for this part, make sure your working directory has the file 
+\b getmonitor.R
+\b0  in it and the run
+\f1\fs24 \cb5 \
+\pard\pardeftab720\sl360
+\cf2 source("http://spark-public.s3.amazonaws.com/compdata/scripts/getmonitor-test.R")\
+getmonitor.testscript()\
+\pard\pardeftab720\sl360
+
+\f0\fs26 \cf2 \cb3 Afterwards, upload the output files on the Assignments List page.
+\b\fs36 \
+\pard\pardeftab720\sl720
+\cf2 Part 2\
+\pard\pardeftab720\sl360
+
+\b0\fs26 \cf2 Write a function that reads a directory full of files and reports the number of completely observed cases in each data file. The function should return a data frame where the first column is the name of the file and the second column is the number of complete cases. A prototype of this function follows
+\f1\fs24 \cb5 \
+\pard\pardeftab720\sl360
+\cf2 complete <- function(directory, id = 1:332) \{\
+        ## 'directory' is a character vector of length 1 indicating\
+        ## the location of the CSV files\
+\
+        ## 'id' is an integer vector indicating the monitor ID numbers\
+        ## to be used\
+        \
+        ## Return a data frame of the form:\
+        ## id nobs\
+        ## 1  117\
+        ## 2  1041\
+        ## ...\
+        ## where 'id' is the monitor ID number and 'nobs' is the\
+        ## number of complete cases\
+\}\
+\pard\pardeftab720\sl360
+
+\f0\fs26 \cf2 \cb3 You can see some {\field{\*\fldinst{HYPERLINK "http://spark-public.s3.amazonaws.com/compdata/documents/complete-output.pdf"}}{\fldrslt \cf4 example output from this function}}. The function that you write should be able to match this output. Please save your code to a file named 
+\b complete.R
+\b0 . To run the test script for this part, make sure your working directory has the file 
+\b complete.R
+\b0  in it and the run
+\f1\fs24 \cb5 \
+\pard\pardeftab720\sl360
+\cf2 source("http://spark-public.s3.amazonaws.com/compdata/scripts/complete-test.R")\
+complete.testscript()\
+\pard\pardeftab720\sl360
+
+\f0\fs26 \cf2 \cb3 Afterwards, upload the output files on the Assignments List page.
+\b\fs36 \
+\pard\pardeftab720\sl720
+\cf2 Part 3\
+\pard\pardeftab720\sl360
+
+\b0\fs26 \cf2 Write a function that takes a directory of data files and a threshold for complete cases and calculates the correlation between sulfate and nitrate for monitor locations where the number of completely observed cases (on all variables) is greater than the threshold. The function should return a vector of correlations for the monitors that meet the threshold requirement. If no monitors meet the threshold requirement, then the function should return a numeric vector of length 0. A prototype of this function follows
+\f1\fs24 \cb5 \
+\pard\pardeftab720\sl360
+\cf2 corr <- function(directory, threshold = 0) \{\
+        ## 'directory' is a character vector of length 1 indicating\
+        ## the location of the CSV files\
+\
+        ## 'threshold' is a numeric vector of length 1 indicating the\
+        ## number of completely observed observations (on all\
+        ## variables) required to compute the correlation between\
+        ## nitrate and sulfate; the default is 0\
+\
+        ## Return a numeric vector of correlations\
+\}\
+\pard\pardeftab720\sl360
+
+\f0\fs26 \cf2 \cb3 For this function you will need to use the 'cor' function in R which calculates the correlation between two vectors. Please read the help page for this function via '?cor' and make sure that you know how to use it.\
+\pard\pardeftab720\sl360\sa180
+\cf2 You can see some {\field{\*\fldinst{HYPERLINK "http://spark-public.s3.amazonaws.com/compdata/documents/corr-output.pdf"}}{\fldrslt \cf4 example output from this function}}. The function that you write should be able to match this output. Please save your code to a file named 
+\b corr.R
+\b0 . To run the test script for this part, make sure your working directory has the file 
+\b corr.R
+\b0  in it and the run\
+\pard\pardeftab720\sl360
+
+\f1\fs24 \cf2 \cb5 source("http://spark-public.s3.amazonaws.com/compdata/scripts/corr-test.R")\
+corr.testscript()\
+\pard\pardeftab720\sl360
+
+\f0\fs26 \cf2 \cb3 Afterwards, upload the output files on the Assignments List page.
+\b\fs36 \
+\pard\pardeftab720\sl720
+\cf2 Grading\
+\pard\pardeftab720\sl360
+
+\b0\fs26 \cf2 This assignment will be graded using unit tests executed via the test scripts you run on your computer. We will compare the output of your functions to the correct output. For each test passed you receive the specified number of points on the Assignments List web page. For each function in this assignment there will be 10 points to earn, for a total of 30 points for the entire assignment.}

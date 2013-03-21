@@ -1,0 +1,12 @@
+
+# Get column names
+csvcut -n Current_Employee_Names__Salaries__and_Position_Titles.csv 
+
+# Cut on 1st, 3rd column, | aggregate for stats
+csvcut -c 1,3 Current_Employee_Names__Salaries__and_Position_Titles.csv |csvstat 
+
+# Cut on columns, sort, top 20, view
+csvcut -c 1,3 Current_Employee_Names__Salaries__and_Position_Titles.csv |csvsort |head -n 20 |csvlook 
+
+
+

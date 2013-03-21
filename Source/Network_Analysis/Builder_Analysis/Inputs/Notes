@@ -1,0 +1,111 @@
+% s/\$//g
+
+
+./building_perms7.py -f clean_2006_Building_Permits.csv -y 2006
+./building_perms7.py -f clean_2007_Building_Permits.csv -y 2007
+./building_perms7.py -f clean_2008_Building_Permits.csv -y 2008
+./building_perms7.py -f clean_2009_Building_Permits.csv -y 2009
+./building_perms7.py -f clean_2010_Building_Permits.csv -y 2010
+./building_perms7.py -f clean_2011_Building_Permits.csv -y 2011
+./building_perms7.py -f clean_2012_Building_Permits.csv -y 2012
+
+
+
+[shea@localhost test_2_building_permits]$ ./building_perms5.py -f clean_2006_Building_Permits.csv -y 2006
+2565
+5153
+[shea@localhost test_2_building_permits]$ ./building_perms5.py -f clean_2007_Building_Permits.csv -y 2007
+2299
+4579
+[shea@localhost test_2_building_permits]$ ./building_perms5.py -f clean_2008_Building_Permits.csv -y 2008
+1966
+3935
+[shea@localhost test_2_building_permits]$ ./building_perms5.py -f clean_2009_Building_Permits.csv -y 2009
+1907
+3788
+[shea@localhost test_2_building_permits]$ ./building_perms5.py -f clean_2010_Building_Permits.csv -y 2010
+2137
+4287
+[shea@localhost test_2_building_permits]$ ./building_perms5.py -f clean_2011_Building_Permits.csv -y 2011
+2113
+4219
+s
+
+[shea@localhost test_2_building_permits]$ csvcut -c 2 clean_2006_Building_Permits.csv |sort |uniq -c
+  10535 PERMIT - EASY PERMIT PROCESS
+  14651 PERMIT - ELECTRIC WIRING
+   1027 PERMIT - ELEVATOR EQUIPMENT
+      2 PERMIT - FOR EXTENSION OF PMT
+   3352 PERMIT - NEW CONSTRUCTION
+   1996 PERMIT - PORCH CONSTRUCTION
+    136 PERMIT - REINSTATE REVOKED PMT
+   8460 PERMIT - RENOVATION/ALTERATION
+    710 PERMIT - SCAFFOLDING
+   3093 PERMIT - SIGNS
+   1446 PERMIT - WRECKING/DEMOLITION
+[shea@localhost test_2_building_permits]$ csvcut -c 2 clean_2007_Building_Permits.csv |sort |uniq -c
+  12003 PERMIT - EASY PERMIT PROCESS
+  14849 PERMIT - ELECTRIC WIRING
+    925 PERMIT - ELEVATOR EQUIPMENT
+     25 PERMIT - FOR EXTENSION OF PMT
+   2409 PERMIT - NEW CONSTRUCTION
+   1080 PERMIT - PORCH CONSTRUCTION
+    136 PERMIT - REINSTATE REVOKED PMT
+   9781 PERMIT - RENOVATION/ALTERATION
+    656 PERMIT - SCAFFOLDING
+   2404 PERMIT - SIGNS
+   1366 PERMIT - WRECKING/DEMOLITION
+[shea@localhost test_2_building_permits]$ csvcut -c 2 clean_2008_Building_Permits.csv |sort |uniq -c
+  11421 PERMIT - EASY PERMIT PROCESS
+  13015 PERMIT - ELECTRIC WIRING
+    785 PERMIT - ELEVATOR EQUIPMENT
+     30 PERMIT - FOR EXTENSION OF PMT
+   1382 PERMIT - NEW CONSTRUCTION
+      1 PERMIT - PORCH CONSTRUCTION
+    130 PERMIT - REINSTATE REVOKED PMT
+   9361 PERMIT - RENOVATION/ALTERATION
+    773 PERMIT - SCAFFOLDING
+   2979 PERMIT - SIGNS
+    962 PERMIT - WRECKING/DEMOLITION
+[shea@localhost test_2_building_permits]$ csvcut -c 2 clean_2009_Building_Permits.csv |sort |uniq -c
+  12246 PERMIT - EASY PERMIT PROCESS
+  14193 PERMIT - ELECTRIC WIRING
+    728 PERMIT - ELEVATOR EQUIPMENT
+      1 PERMIT - FOR EXTENSION OF PMT
+    800 PERMIT - NEW CONSTRUCTION
+    198 PERMIT - REINSTATE REVOKED PMT
+   7816 PERMIT - RENOVATION/ALTERATION
+    698 PERMIT - SCAFFOLDING
+   2444 PERMIT - SIGNS
+    872 PERMIT - WRECKING/DEMOLITION
+[shea@localhost test_2_building_permits]$ csvcut -c 2 clean_2010_Building_Permits.csv |sort |uniq -c
+  11843 PERMIT - EASY PERMIT PROCESS
+  13966 PERMIT - ELECTRIC WIRING
+    739 PERMIT - ELEVATOR EQUIPMENT
+    746 PERMIT - NEW CONSTRUCTION
+    266 PERMIT - REINSTATE REVOKED PMT
+   7816 PERMIT - RENOVATION/ALTERATION
+    569 PERMIT - SCAFFOLDING
+   1865 PERMIT - SIGNS
+   1149 PERMIT - WRECKING/DEMOLITION
+[shea@localhost test_2_building_permits]$ csvcut -c 2 clean_2011_Building_Permits.csv |sort |uniq -c
+   9920 PERMIT - EASY PERMIT PROCESS
+  11568 PERMIT - ELECTRIC WIRING
+    749 PERMIT - ELEVATOR EQUIPMENT
+    790 PERMIT - NEW CONSTRUCTION
+    356 PERMIT - REINSTATE REVOKED PMT
+   8110 PERMIT - RENOVATION/ALTERATION
+    562 PERMIT - SCAFFOLDING
+   2331 PERMIT - SIGNS
+   1154 PERMIT - WRECKING/DEMOLITION
+[shea@localhost test_2_building_permits]$ csvcut -c 2 clean_2012_Building_Permits.csv |sort |uniq -c
+   5551 PERMIT - EASY PERMIT PROCESS
+   6733 PERMIT - ELECTRIC WIRING
+    479 PERMIT - ELEVATOR EQUIPMENT
+    586 PERMIT - NEW CONSTRUCTION
+    217 PERMIT - REINSTATE REVOKED PMT
+   4522 PERMIT - RENOVATION/ALTERATION
+    287 PERMIT - SCAFFOLDING
+   1313 PERMIT - SIGNS
+    891 PERMIT - WRECKING/DEMOLITION
+
