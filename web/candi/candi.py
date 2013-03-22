@@ -32,7 +32,6 @@ class hour(object):
           for row in shortlist:
             diffs = diffs + str((float(row[2]) - float(row[1])) - avgcmel3latency) + ","
             labels = labels + "'" + str(row[3]) + "', "
-
           html = """
 <html><head>
                 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -175,14 +174,18 @@ $(function () {
         #        json = json + '{ "diff": ' + diff + ', "date": "' + str(now) + '", "id": ' + str(seq) + ' }]'
         #        return json
         #else:
+        format = '%Y-%m-%d %H:%M:%S.%f'
         for i in res:
               diff = str((float(i[1]) - float(i[0])) - float(0.000625))
+              datestring = str(i[2])
+              epoch = time.mktime(time.strptime(datestring, format)) * 1000
               # json requires dbl quotes (") around items
-              json = json + '{ "diff": ' + diff + ', "date": "' + str(i[2]) + '", "id": ' + str(i[3]) + ' }'
+              json = json + '{ "diff": ' + diff + ', "date": "' + str(epoch) + '", "id": ' + str(i[3]) + ' }'
               # add a comma to all items except last item
               if i != res[-1]:
                    json = json + ','
         json = json + "]"
+        print json
         return json
     updates.exposed = True
 
