@@ -105,6 +105,7 @@ $(function () {
     $(document).ready(function() {
         Highcharts.setOptions({ global: { useUTC: false } });
         window.max_id = """ + max_id + """,
+	window.missed_tries = 0
         window.chart = new Highcharts.Chart({
             chart: {
                 renderTo: 'container',
@@ -119,13 +120,22 @@ $(function () {
                                 '/candi/realtime/updates/' + window.max_id,
                                 function (data, textStatus, jqXHR) {
                                     var ret = JSON.parse(data);
-                                    for(i = 0; i < ret.length; i++) {
-                                            var x = parseFloat(ret[i].date),
-                                            y = ret[i].diff;
-                                            series.addPoint([x, y], true, true);
-                                            if(ret[i].id > window.max_id) {
-                                               window.max_id = ret[i].id
-                                            }}});
+				    if (ret.length > 0) {
+					    window.missed_tries = 0
+					    for(i = 0; i < ret.length; i++) {
+						    var x = parseFloat(ret[i].date),
+						    y = ret[i].diff;
+						    series.addPoint([x, y], true, true);
+					     }
+				    } else {  
+					if (2 < window.missed_tries & window.missed_tries < 12) {
+						console.log('Boing! '+window.missed_tries);
+						$('#audio-bell')[0].play();
+					}
+					window.missed_tries = window.missed_tries + 1
+				    }
+				}
+			);
                         }, 1000);}}},
             title: { text: 'Candi Cane Jitter Monitor' },
             xAxis: { type: 'datetime', dateTimeLabelFormats: { second: '%H:%M:%S' } },
@@ -142,6 +152,10 @@ $(function () {
            <div id="container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
            <div id="container" style="min-width: 400px; height: 400px; margin: 0 auto; color:white;">
                <h1>Beta Latency Monitor</h1>
+	       <audio id="audio-bell">
+			<source src="/audio/bells001.mp3" type="audio/mpeg">
+			<source src="/audio/bells001.wav" type="audio/wav">
+		</audio>
                <p>This webapp monitors latency in real time. In its current beta form, accuracy is good to within 0.000100 seconds.</p>
 
                <p>The goal of the beta test is to primarily identify packet gaps/drops in addition to changes in latency. A gap will ALWAYS appear as a point at 1.0 seconds. Y-axis points at exactly 1 second are cause for inquiry. Current configuration will have outliers that are false positives with time intervals ranging between 0.000100 and 2.0 seconds, due to measurement error.</p>
