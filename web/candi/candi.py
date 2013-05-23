@@ -120,7 +120,7 @@ $(function () {
                                 function (data, textStatus, jqXHR) {
                                     var ret = JSON.parse(data);
                                     for(i = 0; i < ret.length; i++) {
-                                            var x = (new Date()).getTime(),
+                                            var x = parseFloat(ret[i].date),
                                             y = ret[i].diff;
                                             series.addPoint([x, y], true, true);
                                             if(ret[i].id > window.max_id) {
@@ -185,7 +185,7 @@ $(function () {
               if i != res[-1]:
                    json = json + ','
         json = json + "]"
-        print json
+        #print json
         return json
     updates.exposed = True
 
