@@ -78,7 +78,7 @@ class realtime(object):
         max_id = str(data[0][0])
 
         c = cherrypy.thread_data.db.cursor()
-        c.execute("select seq, t0, t1, date from cme_candi order by seq desc limit 300")
+        c.execute("select seq, t0, t1, date from cme_candi order by seq desc limit 50")
         res = c.fetchall()
         c.close()
         res.reverse()
@@ -126,6 +126,9 @@ $(function () {
 						    var x = parseFloat(ret[i].date),
 						    y = ret[i].diff;
 						    series.addPoint([x, y], true, true);
+                                                    if(ret[i].id > window.max_id) {
+                                                       window.max_id = ret[i].id;
+                                                    }
 					     }
 				    } else {  
 					if (2 < window.missed_tries & window.missed_tries < 12) {
