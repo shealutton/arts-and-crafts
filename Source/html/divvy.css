@@ -1,0 +1,39 @@
+.link       {fill: none;stroke: #666;stroke-width: 1.5px;}
+.link.one   {stroke: #DEEBF7; stroke-width: 1.5px;}
+.link.two   {stroke: #DEEBF7; stroke-width: 1.5px;}
+.link.three {stroke: #C6DAEF; stroke-width: 1.5px;}
+.link.four  {stroke: #C6DAEF; stroke-width: 1.5px;}
+.link.five  {stroke: #9ECAE1; stroke-width: 1.5px;}
+.link.six   {stroke: #6BADD6; stroke-width: 2px;}
+.link.seven {stroke: #4391C6; stroke-width: 2px;}
+.link.eight {stroke: #2176B5; stroke-width: 2.5px;}
+.link.nine  {stroke: #06519C; stroke-width: 2.5px;}
+.link.ten   {stroke: #06306B; stroke-width: 3px;}
+
+a:link    {color:#6BADD6;text-decoration:none;}
+a:visited {color:#2176B5;text-decoration:underline;}
+a:hover   {color:#06306B;text-decoration:underline;}
+a:active  {color:#06306B;text-decoration:none;}
+
+.header    {position: absolute; width: 230px; top:0px; left:10px;}
+.header.h1 {font-size: 18px; line-height: 20px;}
+.header.p  {font-size: 12px; line-height: 14px;}
+.key       {position: absolute; width: 190px; top:20px; left:1000px;}
+.key.p     {font-size: 12px; line-height: 14px;}
+.footer    {position: absolute; width: 850px; top:900px; left:250px;}
+
+circle {
+  fill: #ccc;
+  stroke: #333;
+  stroke-width: 1.5px;
+}
+
+text {
+  font: 10px sans-serif;
+  pointer-events: none;
+  text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+}
+
+#svg     {position: absolute; width: 1200px; top:20px; left:0px}
+#hour    {position: absolute; top:20px; left:1200px; line-height:200%;}
+#hour-color {background-color: #f9fcff;}

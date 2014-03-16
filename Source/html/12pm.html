@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="keywords" content="Shea Lutton, Divvy, Bike, Data, Chicago, D3.js">
+<title>Lutton.org - Divvy Bike Data</title>
+
+<link rel="stylesheet" type="text/css" href="divvy.css">
+<body>
+<div id="hour">
+    <h3>Hour</h3>
+    <div id="hour-color">
+        <a href="12am.html" id="twelveam">12 am</a><br />
+        <a href="1am.html" id="oneam">&nbsp1 am</a><br />
+        <a href="2am.html" id="twoam">&nbsp2 am</a><br />
+        <a href="3am.html" id="threeam">&nbsp3 am</a><br />
+        <a href="4am.html" id="fouram">&nbsp4 am</a><br />
+        <a href="5am.html" id="fiveam">&nbsp5 am</a><br />
+        <a href="6am.html" id="sixam">&nbsp6 am</a><br />
+        <a href="7am.html" id="sevenam">&nbsp7 am</a><br />
+        <a href="8am.html" id="eightam">&nbsp8 am</a><br />
+        <a href="9am.html" id="nineam">&nbsp9 am</a><br />
+        <a href="10am.html" id="tenam">10 am</a><br />
+        <a href="11am.html" id="elevenam">11 am</a><br />
+        <a href="12pm.html" id="twelvepm">12 pm</a><br />
+        <a href="1pm.html" id="onepm">&nbsp1 pm</a><br />
+        <a href="2pm.html" id="twopm">&nbsp2 pm</a><br />
+        <a href="3pm.html" id="threepm">&nbsp3 pm</a><br />
+        <a href="4pm.html" id="fourpm">&nbsp4 pm</a><br />
+        <a href="5pm.html" id="fivepm">&nbsp5 pm</a><br />
+        <a href="6pm.html" id="sixpm">&nbsp6 pm</a><br />
+        <a href="7pm.html" id="sevenpm">&nbsp7 pm</a><br />
+        <a href="8pm.html" id="eightpm">&nbsp8 pm</a><br />
+        <a href="9pm.html" id="ninepm">&nbsp9 pm</a><br />
+        <a href="10pm.html" id="tenpm">10 pm</a><br />
+        <a href="11pm.html" id="elevenpm">11 pm</a><br />
+    </div>
+</div>
+<div class="header">
+    <h1>Divvy Bike Traffic By Hour Of The Day</h1>
+    <p>The Divvy bike share in Chicago released all of their ride data for 2013. These data answer interesting questions such as what are the most popular departure and destination points at different times of the day? Where do the commuters go during rush hour? Where do visitors to Chicago like to travel? <br/><br/>Each hour of the day shows the top 10 departure points and their corresponding top 5 destinations.<br/><br/>Click and drag to move the stations.</p>
+</div>
+
+<div class="footer">
+    <p>Site and analysis by <a href="http://www.lutton.org">Shea Lutton</a>. Trip data from <a href="http://divvybikes.com/datachallenge">Divvy</a>. Based on Mike Bostock's <a href="http://bl.ocks.org/mbostock/1153292">Mobile Patent Suits</a> and built with <a href="http://d3js.org">d3.js</a>.</p>
+</div>
+
+<div class="key">
+<h2>Lunch Lakeside</h2>
+<p>12pm to 1pm: Lunch breaks continue with most riders moving between major city hotspots. Notice that almost everyone riding a Divvy is coming from and going to the same small set of locations.</p>
+</div>
+
+<div id="svg"></div>
+<script src="js/d3.min.js"></script>
+<script>
+var links = [
+{source: "Daley Center Plaza", source_size: 25.0, target: "Streeter Dr & Illinois St", trips: 38.0, type: "one"},
+{source: "Daley Center Plaza", source_size: 25.0, target: "Dearborn St & Adams St", trips: 5.0, type: "one"},
+{source: "Daley Center Plaza", source_size: 25.0, target: "Millennium Park", trips: 36.0, type: "one"},
+{source: "Daley Center Plaza", source_size: 25.0, target: "Lake Shore Dr & Monroe St", trips: 37.0, type: "one"},
+{source: "Daley Center Plaza", source_size: 25.0, target: "Daley Center Plaza", trips: 25.0, type: "one"},
+{source: "Michigan Ave & Lake St", source_size: 26.0, target: "Lake Shore Dr & Monroe St", trips: 37.0, type: "two"},
+{source: "Michigan Ave & Lake St", source_size: 26.0, target: "Fairbanks Ct & Grand Ave", trips: 5.0, type: "two"},
+{source: "Michigan Ave & Lake St", source_size: 26.0, target: "Michigan Ave & Pearson St", trips: 6.0, type: "two"},
+{source: "Michigan Ave & Lake St", source_size: 26.0, target: "Millennium Park", trips: 36.0, type: "two"},
+{source: "Michigan Ave & Lake St", source_size: 26.0, target: "Michigan Ave & Lake St", trips: 26.0, type: "two"},
+{source: "Franklin St & Jackson Blvd", source_size: 26.0, target: "Clinton St & Washington Blvd", trips: 5.0, type: "three"},
+{source: "Franklin St & Jackson Blvd", source_size: 26.0, target: "State St & Van Buren St", trips: 5.0, type: "three"},
+{source: "Franklin St & Jackson Blvd", source_size: 26.0, target: "Daley Center Plaza", trips: 25.0, type: "three"},
+{source: "Franklin St & Jackson Blvd", source_size: 26.0, target: "Wabash Ave & Roosevelt Rd", trips: 6.0, type: "three"},
+{source: "Franklin St & Jackson Blvd", source_size: 26.0, target: "Millennium Park", trips: 36.0, type: "three"},
+{source: "McClurg Ct & Illinois St", source_size: 27.0, target: "Lake Shore Dr & Monroe St", trips: 37.0, type: "four"},
+{source: "McClurg Ct & Illinois St", source_size: 27.0, target: "Streeter Dr & Illinois St", trips: 38.0, type: "four"},
+{source: "McClurg Ct & Illinois St", source_size: 27.0, target: "Museum Campus", trips: 33.0, type: "four"},
+{source: "McClurg Ct & Illinois St", source_size: 27.0, target: "Michigan Ave & Pearson St", trips: 7.0, type: "four"},
+{source: "McClurg Ct & Illinois St", source_size: 27.0, target: "McClurg Ct & Illinois St", trips: 27.0, type: "four"},
+{source: "Theater on the Lake", source_size: 27.0, target: "Lake Shore Dr & Monroe St", trips: 37.0, type: "five"},
+{source: "Theater on the Lake", source_size: 27.0, target: "Montrose Harbor", trips: 6.0, type: "five"},
+{source: "Theater on the Lake", source_size: 27.0, target: "Michigan Ave & Oak St", trips: 32.0, type: "five"},
+{source: "Theater on the Lake", source_size: 27.0, target: "Theater on the Lake", trips: 27.0, type: "five"},
+{source: "Theater on the Lake", source_size: 27.0, target: "Streeter Dr & Illinois St", trips: 38.0, type: "five"},
+{source: "Michigan Ave & Oak St", source_size: 32.0, target: "Cannon Dr & Fullerton Ave", trips: 8.0, type: "six"},
+{source: "Michigan Ave & Oak St", source_size: 32.0, target: "Lake Shore Dr & Monroe St", trips: 37.0, type: "six"},
+{source: "Michigan Ave & Oak St", source_size: 32.0, target: "Streeter Dr & Illinois St", trips: 38.0, type: "six"},
+{source: "Michigan Ave & Oak St", source_size: 32.0, target: "Theater on the Lake", trips: 27.0, type: "six"},
+{source: "Michigan Ave & Oak St", source_size: 32.0, target: "Michigan Ave & Oak St", trips: 32.0, type: "six"},
+{source: "Museum Campus", source_size: 33.0, target: "Fort Dearborn Dr & 31st St", trips: 7.0, type: "seven"},
+{source: "Museum Campus", source_size: 33.0, target: "Streeter Dr & Illinois St", trips: 38.0, type: "seven"},
+{source: "Museum Campus", source_size: 33.0, target: "Lake Shore Dr & Monroe St", trips: 37.0, type: "seven"},
+{source: "Museum Campus", source_size: 33.0, target: "Millennium Park", trips: 36.0, type: "seven"},
+{source: "Museum Campus", source_size: 33.0, target: "Museum Campus", trips: 33.0, type: "seven"},
+{source: "Millennium Park", source_size: 36.0, target: "Michigan Ave & Oak St", trips: 32.0, type: "eight"},
+{source: "Millennium Park", source_size: 36.0, target: "Lake Shore Dr & Monroe St", trips: 37.0, type: "eight"},
+{source: "Millennium Park", source_size: 36.0, target: "Streeter Dr & Illinois St", trips: 38.0, type: "eight"},
+{source: "Millennium Park", source_size: 36.0, target: "Millennium Park", trips: 36.0, type: "eight"},
+{source: "Millennium Park", source_size: 36.0, target: "Museum Campus", trips: 33.0, type: "eight"},
+{source: "Lake Shore Dr & Monroe St", source_size: 37.0, target: "Millennium Park", trips: 36.0, type: "nine"},
+{source: "Lake Shore Dr & Monroe St", source_size: 37.0, target: "McClurg Ct & Illinois St", trips: 27.0, type: "nine"},
+{source: "Lake Shore Dr & Monroe St", source_size: 37.0, target: "Museum Campus", trips: 33.0, type: "nine"},
+{source: "Lake Shore Dr & Monroe St", source_size: 37.0, target: "Lake Shore Dr & Monroe St", trips: 37.0, type: "nine"},
+{source: "Lake Shore Dr & Monroe St", source_size: 37.0, target: "Streeter Dr & Illinois St", trips: 38.0, type: "nine"},
+{source: "Streeter Dr & Illinois St", source_size: 38.0, target: "Museum Campus", trips: 33.0, type: "ten"},
+{source: "Streeter Dr & Illinois St", source_size: 38.0, target: "Theater on the Lake", trips: 27.0, type: "ten"},
+{source: "Streeter Dr & Illinois St", source_size: 38.0, target: "Millennium Park", trips: 36.0, type: "ten"},
+{source: "Streeter Dr & Illinois St", source_size: 38.0, target: "Lake Shore Dr & Monroe St", trips: 37.0, type: "ten"},
+{source: "Streeter Dr & Illinois St", source_size: 38.0, target: "Streeter Dr & Illinois St", trips: 38.0, type: "ten"}
+];
+var nodes = {};
+
+// Compute the distinct nodes from the links.
+links.forEach(function(link) {
+  link.source = nodes[link.source] || (nodes[link.source] = {name: link.source, radius: link.source_size});
+  link.target = nodes[link.target] || (nodes[link.target] = {name: link.target, radius: link.trips});
+});
+
+var force = d3.layout.force()
+    .nodes(d3.values(nodes))
+    .links(links)
+    .size([1200, 900])
+    .linkDistance(200)
+    .charge(-500)
+    .on("tick", tick)
+    .start();
+
+var svg = d3.select("#svg")
+    .append("svg")
+    .attr("width", 1200)
+    .attr("height", 900);
+
+// Per-type markers, as they don't inherit styles.
+svg.append("defs").selectAll("marker")
+    .data(["ten", "nine", "eight", "seven", "six", "five", "four", "three", "two", "one"])
+  .enter().append("marker")
+    .attr("id", function(d) { return d; })
+    .attr("viewBox", "0 -5 10 10")
+    .attr("refX", 15)
+    .attr("refY", -1.5)
+    .attr("markerWidth", 6)
+    .attr("markerHeight", 6)
+    .attr("orient", "auto")
+  .append("path")
+    .attr("d", "M0,-5L10,0L0,5");
+
+var path = svg.append("g").selectAll("path")
+    .data(force.links())
+  .enter().append("path")
+    .attr("class", function(d) { return "link " + d.type; })
+    .attr("marker-end", function(d) { return "url(#" + d.type + ")"; });
+
+var circle = svg.append("g").selectAll("circle")
+    .data(force.nodes())
+  .enter().append("circle")
+    .attr("r", function(d) { return d.radius; })
+    .call(force.drag)
+    .on("mouseover", function(){d3.select(this).style("fill", "#06519C");})
+    .on("mouseout", function(){d3.select(this).style("fill", "#ccc");});
+
+var text = svg.append("g").selectAll("text")
+    .data(force.nodes())
+  .enter().append("text")
+    .attr("x", 8)
+    .attr("y", ".31em")
+    .text(function(d) { return d.name; });
+
+// Use elliptical arc path segments to doubly-encode directionality.
+function tick() {
+  path.attr("d", linkArc);
+  circle.attr("transform", transform);
+  text.attr("transform", transform);
+}
+
+function linkArc(d) {
+  var dx = d.target.x - d.source.x,
+      dy = d.target.y - d.source.y,
+      dr = Math.sqrt(dx * dx + dy * dy);
+  return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
+}
+
+function transform(d) {
+  return "translate(" + d.x + "," + d.y + ")";
+}
+</script>
