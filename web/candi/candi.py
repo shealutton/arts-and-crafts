@@ -32,7 +32,6 @@ class hour(object):
           for row in shortlist:
             diffs = diffs + str((float(row[2]) - float(row[1])) - avgcmel3latency) + ","
             labels = labels + "'" + str(row[3]) + "', "
-
           html = """
 <html><head>
                 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -79,7 +78,7 @@ class realtime(object):
         max_id = str(data[0][0])
 
         c = cherrypy.thread_data.db.cursor()
-        c.execute("select seq, t0, t1, date from cme_candi order by seq desc limit 300")
+        c.execute("select seq, t0, t1, date from cme_candi order by seq desc limit 50")
         res = c.fetchall()
         c.close()
         res.reverse()
@@ -106,6 +105,7 @@ $(function () {
     $(document).ready(function() {
         Highcharts.setOptions({ global: { useUTC: false } });
         window.max_id = """ + max_id + """,
+	window.missed_tries = 0
         window.chart = new Highcharts.Chart({
             chart: {
                 renderTo: 'container',
@@ -120,13 +120,25 @@ $(function () {
                                 '/candi/realtime/updates/' + window.max_id,
                                 function (data, textStatus, jqXHR) {
                                     var ret = JSON.parse(data);
-                                    for(i = 0; i < ret.length; i++) {
-                                            var x = (new Date()).getTime(),
-                                            y = ret[i].diff;
-                                            series.addPoint([x, y], true, true);
-                                            if(ret[i].id > window.max_id) {
-                                               window.max_id = ret[i].id
-                                            }}});
+				    if (ret.length > 0) {
+					    window.missed_tries = 0
+					    for(i = 0; i < ret.length; i++) {
+						    var x = parseFloat(ret[i].date),
+						    y = ret[i].diff;
+						    series.addPoint([x, y], true, true);
+                                                    if(ret[i].id > window.max_id) {
+                                                       window.max_id = ret[i].id;
+                                                    }
+					     }
+				    } else {  
+					if (2 < window.missed_tries & window.missed_tries < 12) {
+						console.log('Boing! '+window.missed_tries);
+						$('#audio-bell')[0].play();
+					}
+					window.missed_tries = window.missed_tries + 1
+				    }
+				}
+			);
                         }, 1000);}}},
             title: { text: 'Candi Cane Jitter Monitor' },
             xAxis: { type: 'datetime', dateTimeLabelFormats: { second: '%H:%M:%S' } },
@@ -143,6 +155,10 @@ $(function () {
            <div id="container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
            <div id="container" style="min-width: 400px; height: 400px; margin: 0 auto; color:white;">
                <h1>Beta Latency Monitor</h1>
+	       <audio id="audio-bell">
+			<source src="/audio/bells001.mp3" type="audio/mpeg">
+			<source src="/audio/bells001.wav" type="audio/wav">
+		</audio>
                <p>This webapp monitors latency in real time. In its current beta form, accuracy is good to within 0.000100 seconds.</p>
 
                <p>The goal of the beta test is to primarily identify packet gaps/drops in addition to changes in latency. A gap will ALWAYS appear as a point at 1.0 seconds. Y-axis points at exactly 1 second are cause for inquiry. Current configuration will have outliers that are false positives with time intervals ranging between 0.000100 and 2.0 seconds, due to measurement error.</p>
@@ -175,14 +191,18 @@ $(function () {
         #        json = json + '{ "diff": ' + diff + ', "date": "' + str(now) + '", "id": ' + str(seq) + ' }]'
         #        return json
         #else:
+        format = '%Y-%m-%d %H:%M:%S.%f'
         for i in res:
               diff = str((float(i[1]) - float(i[0])) - float(0.000625))
+              datestring = str(i[2])
+              epoch = time.mktime(time.strptime(datestring, format)) * 1000
               # json requires dbl quotes (") around items
-              json = json + '{ "diff": ' + diff + ', "date": "' + str(i[2]) + '", "id": ' + str(i[3]) + ' }'
+              json = json + '{ "diff": ' + diff + ', "date": "' + str(epoch) + '", "id": ' + str(i[3]) + ' }'
               # add a comma to all items except last item
               if i != res[-1]:
                    json = json + ','
         json = json + "]"
+        #print json
         return json
     updates.exposed = True
 
