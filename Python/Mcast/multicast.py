@@ -95,7 +95,8 @@ def send():
     ttl = 16      # Set Time-to-live (optional)
     ttl_bin = struct.pack('@i', ttl)
     sock_out.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, ttl_bin)
-    sock_out.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_IF, socket.inet_aton(args.interface))
+    if args.interface:
+        sock_out.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_IF, socket.inet_aton(args.interface))
 
     counter = 0
     while counter < max:
